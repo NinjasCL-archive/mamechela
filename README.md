@@ -33,7 +33,7 @@ Consist in a Python Script that Talks to an Arduino. This script checks if the f
 
 7. Connect Arduino (more to come)
 
-8. Che that mamechela.py is configured correctly (Arduino Config)
+8. Check that mamechela.py is configured correctly (Arduino Config)
 
 9. Check mamechela.sh commands
 
