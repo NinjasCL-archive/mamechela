@@ -1,4 +1,16 @@
-/* Tunes Code From https://github.com/tomds/Arduino-Tunes/blob/master/arduino_tunes.pde */
+/*
+The MIT License (MIT)
+Copyright (c)  2013 Camilo Castro - camilocastrocabrera@gmail.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+/* Tunes Code From https://github.com/tomds/Arduino-Tunes */
+
 
 #include <Servo.h>
 
@@ -12,7 +24,7 @@ String command = "";
 
 int resetButtonPin = 9;
 int shutdownButtonPin = 7;
-int randomSong = 1;
+static int randomSong = 1;
 
 /* Smaller value -> all tunes play faster; bigger -> slower. Recommend you don't change this, but
 instead use playTune() to pass different beatLength values to parseTune() for different songs */
@@ -187,8 +199,8 @@ void loop(){
        boolean reset_button_pressed = handle_button(resetButtonPin);
        boolean shutdown_button_pressed = handle_button(shutdownButtonPin);
        
-       randomSong = random(1,6);
-       //randomSong = 5;
+       // 1 to 6
+       randomSong = random(1,7);
     
        if(reset_button_pressed){ 
          Serial.println("reset");
@@ -203,17 +215,6 @@ void loop(){
          //playTune(randomSong);
          playTune(6);
        }
-       /*Serial.print(button_pressed ? "#" : ".");
-       
-       static int counter = 0;
-       
-       if((++counter & 0x3f) == 0) Serial.println();
-       
-       delay(20);
-       */
-       
-       //ButtonEvent.loop();
-       //analogWrite(servoPin,calibrate);
 }
 
 
@@ -233,7 +234,6 @@ void serialEvent(){
     // if we get a Beer Command, set the flag
     if(command == "Beer"){
        
-       playTune(randomSong); // Frogger
        
        Serial.println("Command Received!");
        
@@ -244,6 +244,8 @@ void serialEvent(){
        
        Serial.println("Beertastic!");
        delay(1000);
+       
+       playTune(randomSong);
        
        beerServo.attach(servoPin);
        beerServo.write(45);  // Turn Servo Left to 45 degrees
