@@ -1,4 +1,4 @@
-# MAMECHELA
+# MameChela
 ####You got a Hiscore You won a Beer
 
 MameChela is a simple hack to mame based in the MKCHAMP hack for Hiscores.
