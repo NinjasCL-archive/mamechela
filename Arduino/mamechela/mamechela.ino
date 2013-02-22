@@ -40,7 +40,6 @@ void playNote(char note, int duration, boolean sharp) {
   char names_sharp[] = { 'c', 'd', 'f', 'g', 'a', 'C', 'D', 'F', 'G', 'A'};
   int tones_sharp[] = { 1804, 1607, 1351, 1204, 1073, 902, 804, 676, 602, 536 };
   
-  // C# 1204
   
   // play the tone corresponding to the note name
   if (sharp == false) {
@@ -129,18 +128,26 @@ void playTune (int tune) {
   if (tune == 1) { // Jingle Bells
     char notes[] = "b4b4b8b4b4b8b4D4g6a2b12,4C4C4C6C2C4b4b4b2b2b4a4a4b4a8D8b4b4b8b4b4b8b4D4g6a2b12,4,C4C4C6C2C4b4b4b2b2D4D4C4a4g12,8.";
     parseTune(notes, beatLength, false);
+    
   } else if (tune == 2) { // The Holly and the Ivy
     char notes[] = "g4g2g2g4E4D4b6g2g2g2g4E4D8D2C2b2a2g4b2b2e2e2d4g2a2b2C2b4a4g8,8.";
     parseTune(notes, beatLength * 1.50, false);
+    
   } else if (tune == 3) { // We Wish You a Merry Christmas
     char notes[] = "d4g4g2a2g2f#2e4c4e4a4a2b2a2g2f#4d4f#4b4b2C2b2a2g4e4d2d2e4a4f#4g8,8.";
     parseTune(notes, beatLength * 1.25, false);
+    
   } else if (tune == 4) { // Deck the Halls
     char notes[] = "D6C2b4a4g4a4b4g4a2b2C2a2b6a2g4f#4g6,2D6C2b4a4g4a4b4g4a2b2C2a2b6a2g4f#4g6,2a6b2C4a4b6C2D4a4b2C#2D4E2F#2G4F#4E4D6,2D6C2b4a4g4a4b4g4E2E2E2E2D6C2b4a4g8,8.";
     parseTune(notes, beatLength, false);
+    
   } else if (tune == 5) { // Frogger!
     char notes[] = "F#2D2a2D2F#2D2a2dD2G2G2,1F#2,1E2,2,4G2G2F#2F#2E2E2C#2C#2A2G2F#2E2D4,4.";
     parseTune(notes, beatLength * 2, false);
+    
+  } else if (tune == 6) { // Dig Dug!
+    char notes[] = "F#2G2G2G2,1G2G2G2F#2G2G2G2,1G2G2G2E2,1D2E2,1D2E2D1E2,1,4D2,1,4D#2E2E2E2,1E2E2E2D#2E2E2E2,1E2E2E2E2,1D2E2,1D2E2D2G4.";
+    parseTune(notes, beatLength * 1.155, false);
   }
 }
 
@@ -180,19 +187,21 @@ void loop(){
        boolean reset_button_pressed = handle_button(resetButtonPin);
        boolean shutdown_button_pressed = handle_button(shutdownButtonPin);
        
-       randomSong = random(1,6);
+       //randomSong = random(1,6);
        //randomSong = 5;
     
        if(reset_button_pressed){ 
          Serial.println("reset");
          delay(200);
          //playTune(randomSong);
+         playTune(5);
        }
        
         if(shutdown_button_pressed){ 
          Serial.println("shutdown");
          delay(200);
          //playTune(randomSong);
+         playTune(6);
        }
        /*Serial.print(button_pressed ? "#" : ".");
        
