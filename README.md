@@ -39,6 +39,7 @@ Consist in a Python Script that Talks to an Arduino. This script checks if the f
 
 10. For turn off use Ctrl+C or Arduino's Shutdown command
 
-usage
-./mamechela.sh <game> 
+####Usage
+
+		./mamechela.sh <game> 
 
