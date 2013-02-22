@@ -187,7 +187,7 @@ void loop(){
        boolean reset_button_pressed = handle_button(resetButtonPin);
        boolean shutdown_button_pressed = handle_button(shutdownButtonPin);
        
-       //randomSong = random(1,6);
+       randomSong = random(1,6);
        //randomSong = 5;
     
        if(reset_button_pressed){ 
