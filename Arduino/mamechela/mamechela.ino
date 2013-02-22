@@ -206,14 +206,14 @@ void loop(){
          Serial.println("reset");
          delay(200);
          //playTune(randomSong);
-         playTune(5);
+         //playTune(5);
        }
        
         if(shutdown_button_pressed){ 
          Serial.println("shutdown");
          delay(200);
          //playTune(randomSong);
-         playTune(6);
+         //playTune(6);
        }
 }
 
@@ -268,7 +268,7 @@ void serialEvent(){
        
        beerServo.detach();
         
-       Serial.println("Have Fun! :D ");
+       Serial.println("beerSent");
        Serial.flush();
        
        command = "";

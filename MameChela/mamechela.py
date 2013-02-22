@@ -14,11 +14,24 @@ import time
 import shutil
 import serial
 
+def shutdown(arduino,mame_pid):
+    print "Shutting Down!"
+    
+    # So we only kill mame if there is a pid and mame still is open
+    if(mame_pid != "mame"):
+        os.system("kill %s" %(mame_pid))
+
+
+    arduino.close()
+
+    print "So Long :D"
+    sys.exit(0)
+
 if __name__ == "__main__":
     # Different States We Use
     # Idle
     # SendingBeer
-    # WaitingReset
+    # WaitingCommand
     state = 'idle'
     
     # Delay of seconds for Main Loop pausing
@@ -34,22 +47,28 @@ if __name__ == "__main__":
     port = '/dev/ttyACM0'
     bauds = 9600
     
+    # Holds the commands sent by Arduino
+    command = ""
     
-    if len(data) > 2:
+    if len(data) > 1:
         game_name = data[1]
-        mame_pid = data[2]
+
+        mame_pid = "mame"
+        
+        if len(data) > 2: 
+            mame_pid = data[2]
        
         # Open Arduino Communication
         try:
             print "Initializing Arduino"
             arduino = serial.Serial(port,bauds)
+            
+            # Some seconds to let Arduino be happy
+            time.sleep(delay2)
         except:
             print "Error in Arduino Setup"
             sys.exit(1)
             
-        # Some seconds to let Arduino be happy
-        time.sleep(delay2)
-        
         
         # Reading HiScore Files
         path = os.curdir + os.sep + "hi" + os.sep + game_name
@@ -65,6 +84,7 @@ if __name__ == "__main__":
         
         try:
             while True:
+                
                 if state == 'idle':
                     # We read the files and compares them
                     # if they are different, we have a hiscore
@@ -82,7 +102,7 @@ if __name__ == "__main__":
                             shutil.copy2(hi_cache,hi_initial)
                                                       
                         else:
-                            print "No Changes"
+                            print "No Hiscores :C"
                         
                     
                         file_initial.close()
@@ -100,37 +120,41 @@ if __name__ == "__main__":
                     except:
                         print "Error Sending Command"
                         
-                    state = 'waitingReset'
+                    # Read the command and waits until its "beer sent"
+                    while(command != "beersent"):
+                        command = arduino.readline().strip().lower()
+                        time.sleep(delay2)
+                        
+                    print "BeerStastic,  Have Fun :D !!!"
+                                    
+                    state = 'waitingCommand'
                     
-                # We wait until Reset command is received
+                # We wait until Reset or Shutdown command is received
                 else:
                     print "Waiting Reset or Shutdown Command"
                     
-                    #try:
-                command = arduino.readline().strip().lower()
-                if command == "reset":
-                    print "Reset!"
-                    state = "idle"
-                elif command == "shutdown":
-                    print "Shutting Down!"
-                    os.system("kill %s" %(mame_pid))
-                    arduino.close()
-                    sys.exit(0)
+                    command = arduino.readline().strip().lower()
+                    
+                    if command == "reset":
+                        print "Reset!"
                         
-                    #except:
-                    #    print "Error Waiting Commands"
+                        # Just to make sure HiScore files are the same
+                        shutil.copy2(hi_cache,hi_initial)
+                        
+                        state = "idle"
+                        
+                    elif command == "shutdown":
+                        shutdown(arduino,mame_pid)
+                        
                         
                 time.sleep(delay)
                 
         except KeyboardInterrupt:
-            try:
-                arduino.close()
-            except:
-                print "Error Closing Arduino"
-                sys.exit(1)
-            
-            print "So Long :D"
-            sys.exit(0)
+            shutdown(arduino,mame_pid)
+        
+        except:
+            print "Something bad happened"
+            sys.exit(1)
     else:
         print "I Need a Game Name"
         sys.exit(1)
