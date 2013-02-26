@@ -45,8 +45,8 @@ p = ((1 / freq) * 1,000,000) / 2. We divide by 2 because the signal will be HIGH
 for p microseconds. Frequencies for the notes obtained from http://www.phy.mtu.edu/~suits/notefreqs.html
 The range defined below covers 2 octaves from C4 (middle C, or 261.63Hz) to B5 (987.77Hz). Feel free to modify. */
 void playNote(char note, int duration, boolean sharp) {
-  char names[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C', 'D', 'E', 'F', 'G', 'A', 'B' };
-  int tones[] = { 1915, 1700, 1519, 1432, 1275, 1136, 1014, 956, 851, 758, 716, 636, 568, 506 };
+  char names[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C', 'D', 'E', 'F', 'G', 'A', 'B', 'V' };
+  int tones[] = { 1915, 1700, 1519, 1432, 1275, 1136, 1014, 956, 851, 758, 716, 636, 568, 506,480 };
   
   // these are the "sharp" versions of each note e.g. the first value is for "c#"
   char names_sharp[] = { 'c', 'd', 'f', 'g', 'a', 'C', 'D', 'F', 'G', 'A'};
@@ -55,7 +55,7 @@ void playNote(char note, int duration, boolean sharp) {
   
   // play the tone corresponding to the note name
   if (sharp == false) {
-    for (int i = 0; i < 14; i++) {
+    for (int i = 0; i < 15; i++) {
       if (names[i] == note) {
         playTone(tones[i], duration);
       }
@@ -160,6 +160,10 @@ void playTune (int tune) {
   } else if (tune == 6) { // Dig Dug!
     char notes[] = "F#2G2G2G2,1G2G2G2F#2G2G2G2,1G2G2G2E2,1D2E2,1D2E2D1E2,1,4D2,1,4D#2E2E2E2,1E2E2E2D#2E2E2E2,1E2E2E2E2,1D2E2,1D2E2D2G4.";
     parseTune(notes, beatLength * 1.155, false);
+    
+  } else if (tune == 7) { // Star Wars
+    char notes[] = "a#8F8D#1C1a#1A#8F4D#1C1a#1A#8F4D#1C#1D#1C8.";
+    parseTune(notes,beatLength * 2,false);
   }
 }
 
@@ -199,8 +203,8 @@ void loop(){
        boolean reset_button_pressed = handle_button(resetButtonPin);
        boolean shutdown_button_pressed = handle_button(shutdownButtonPin);
        
-       // 1 to 6
-       randomSong = random(1,7);
+       // 1 to 7
+       randomSong = random(1,8);
     
        if(reset_button_pressed){ 
          Serial.println("reset");
@@ -231,6 +235,8 @@ void serialEvent(){
     // add to the command String
     command += inChar;
     
+    //Serial.println(command);
+    
     // if we get a Beer Command, set the flag
     if(command == "Beer"){
        
@@ -245,6 +251,7 @@ void serialEvent(){
        Serial.println("Beertastic!");
        delay(1000);
        
+       //playTune(7);
        playTune(randomSong);
        
        beerServo.attach(servoPin);
